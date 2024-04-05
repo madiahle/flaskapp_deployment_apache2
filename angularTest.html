@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Query API and Fill Inputs with AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  </head>
+  <body>
+    <input type="text" ng-model="searchQuery" ng-keyup="searchAPI()" />
+    <br />
+
+    <!-- Input fields to be filled with API response -->
+    <input type="text" ng-model="apiResponse.field1" />
+    <input type="text" ng-model="apiResponse.field2" />
+
+    <script>
+      angular
+        .module("myApp", [])
+        .controller("MainController", function ($scope, $http) {
+          // Function to query API based on user input
+          $scope.searchAPI = function () {
+            // Check if search query is not empty
+            if ($scope.searchQuery) {
+              $http.get("/action/beneficiaire/".$scope.searchQuery).then(
+                function (response) {
+                  // If API call is successful, populate input fields with response data
+                  $scope.apiResponse = response.data;
+                },
+                function (error) {
+                  // Handle error
+                  console.error("Error querying API:", error);
+                }
+              );
+            } else {
+              // Clear input fields if search query is empty
+              $scope.apiResponse = {};
+            }
+          };
+        });
+    </script>
+  </body>
+</html>
